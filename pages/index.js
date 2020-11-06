@@ -18,10 +18,10 @@ import IconJSONSVG from '../public/icon-json.svg';
 import css from './style.module.css';
 
 const TYPE_TO_ICON = {
-  'text/plain': IconPlaintextSVG,
-  'text/markdown': IconMarkdownSVG,
-  'text/javascript': IconJavaScriptSVG,
-  'application/json': IconJSONSVG
+    'text/plain': IconPlaintextSVG,
+    'text/markdown': IconMarkdownSVG,
+    'text/javascript': IconJavaScriptSVG,
+    'application/json': IconJSONSVG
 };
 
 function FilesTable({ files, activeFile, setActiveFile }) {
@@ -71,19 +71,19 @@ function FilesTable({ files, activeFile, setActiveFile }) {
 }
 
 FilesTable.propTypes = {
-  files: PropTypes.arrayOf(PropTypes.object),
-  activeFile: PropTypes.object,
-  setActiveFile: PropTypes.func
+    files: PropTypes.arrayOf(PropTypes.object),
+    activeFile: PropTypes.object,
+    setActiveFile: PropTypes.func
 };
 
 function Previewer({ file }) {
-  const [value, setValue] = useState('');
+    const [value, setValue] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      setValue(await file.text());
-    })();
-  }, [file]);
+    useEffect(() => {
+        (async() => {
+            setValue(await file.text());
+        })();
+    }, [file]);
 
   return (
     <div className={css.preview}>
@@ -94,31 +94,33 @@ function Previewer({ file }) {
 }
 
 Previewer.propTypes = {
-  file: PropTypes.object
+    file: PropTypes.object
 };
 
 // Uncomment keys to register editors for media types
 const REGISTERED_EDITORS = {
-  // "text/plain": PlaintextEditor,
-  // "text/markdown": MarkdownEditor,
+    "text/plain": PlaintextEditor,
+    "text/markdown": MarkdownEditor,
 };
 
 function PlaintextFilesChallenge() {
-  const [files, setFiles] = useState([]);
-  const [activeFile, setActiveFile] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [activeFile, setActiveFile] = useState(null);
 
-  useEffect(() => {
-    const files = listFiles();
-    setFiles(files);
-  }, []);
+    useEffect(() => {
+        const files = listFiles();
+        setFiles(files);
+    }, []);
 
-  const write = file => {
-    console.log('Writing soon... ', file.name);
+    const write = file => {
+        //give me back all the files except the one that need replacement.
+        const newFilesList = files.filter((f) => f.name !== file.name);
+        //Add back new updated file.
+        newFilesList.push(file);
+        setFiles(newFilesList);
+    };
 
-    // TODO: Write the file to the `files` array
-  };
-
-  const Editor = activeFile ? REGISTERED_EDITORS[activeFile.type] : null;
+    const Editor = activeFile ? REGISTERED_EDITORS[activeFile.type] : null;
 
   return (
     <div className={css.page}>
